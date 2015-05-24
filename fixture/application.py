@@ -13,14 +13,10 @@ class Application:
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
 
-
     def open_homepage(self, wd):
         wd = self.wd
         wd.get("http://localhost/addressbook/")
 
-    def return_to_homepage(self):
-        wd = self.wd
-        wd.find_element_by_link_text("home page").click()
 
     def destroy(self):
         self.wd.quit()

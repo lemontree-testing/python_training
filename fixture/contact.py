@@ -30,5 +30,9 @@ class ContactHelper:
         #submit new contact
         wd.find_element_by_name("theform").click()
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
-        self.app.return_to_homepage()
+        self.return_to_homepage()
+
+    def return_to_homepage(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("home page").click()
 
