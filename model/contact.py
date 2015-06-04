@@ -1,7 +1,7 @@
 __author__ = 'lemontree'
 
 class Contacts:
-    def __init__(self,name,lastname,nickname,company,email,year_of_birth):
+    def __init__(self,name=None,lastname=None,nickname=None,company=None,email=None,year_of_birth=None):
         self.firstname=name
         self.lastname=lastname
         self.nickname=nickname
