@@ -8,7 +8,6 @@ class Application:
 
     def __init__(self):
         self.wd = WebDriver()
-        self.wd.implicitly_wait(5)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
@@ -22,7 +21,8 @@ class Application:
 
     def open_homepage(self, wd):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
+        if not(wd.current_url.endswith("/addressbook/")):
+            wd.get("http://localhost/addressbook/")
 
     def destroy(self):
         self.wd.quit()
