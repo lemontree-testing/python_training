@@ -1,5 +1,7 @@
 __author__ = 'lemontree'
 
+from model.contact import Contacts
+
 class ContactHelper:
     def __init__(self, app):
         self.app = app
@@ -60,4 +62,15 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_homepage(wd)
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.app.open_homepage(wd)
+        contacts = []
+        for element in wd.find_elements_by_name("entry"):
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            firstname = element.find_element_by_xpath(".//td[3]").text
+            lastname = element.find_element_by_xpath(".//td[2]").text
+            contacts.append(Contacts(name=firstname, lastname=lastname, id = id))
+        return contacts
 
