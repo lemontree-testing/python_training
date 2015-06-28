@@ -16,7 +16,3 @@ def test_edit_contact(app):
     old_contacts[index]=contact
     assert sorted(old_contacts, key = Contacts.id_or_max) == sorted(new_contacts, key = Contacts.id_or_max)
 
-#def test_edit_contact_lastname(app):
-#    if app.contact.count() == 0:
-#        app.contact.create(Contacts(name="FirstName",lastname="FirstLastName", nickname="Nickname"))
-#    app.contact.edit_first_contact(Contacts(lastname="YetAnotherLastName"))
