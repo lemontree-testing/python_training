@@ -80,7 +80,6 @@ class ContactHelper:
         self.app.open_homepage(wd)
         #select a contact_to view
         wd.find_elements_by_css_selector('img[alt="Details"]')[index].click()
-        self.return_to_homepage()
         self.contact_cache = None
 
     def return_to_homepage(self):
@@ -132,7 +131,7 @@ class ContactHelper:
         wd = self.app.wd
         self.view_contact_by_index(index)
         text = wd.find_element_by_id("content").text
-        homephone = re.search("H:(.*)", text).group(1)
-        workphone =  re.search("W:(.*)", text).group(1)
-        mobilephone =  re.search("M:(.*)", text).group(1)
+        homephone = re.search("H: (.*)", text).group(1)
+        workphone =  re.search("W: (.*)", text).group(1)
+        mobilephone =  re.search("M: (.*)", text).group(1)
         return Contacts(homephone = homephone, workphone = workphone, mobilephone = mobilephone)
