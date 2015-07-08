@@ -1,18 +1,23 @@
 __author__ = 'lemontree'
 
 from model.contact import Contacts
-from random import randrange
+import random
+#from random import randrange
 
-def test_edit_contact(app):
+def test_edit_contact(app, db, check_ui):
     if app.contact.count() == 0:
         app.contact.create(Contacts(name="FirstName",lastname="FirstLastName", nickname="Nickname"))
-    old_contacts = app.contact.get_contact_list()
-    index = randrange(len(old_contacts))
+    old_contacts = db.get_contact_list()
+    edit_contact = random.choice(old_contacts)
     contact=Contacts(name="New_Name",lastname="New_LastName", nickname="New_Nickname", company="New_AppliedTests",email="new.name.lastname@applied-testing.ru",year_of_birth="1990")
-    app.contact.edit_contact_by_index(index,contact)
-    contact.id = old_contacts[index].id
-    assert len(old_contacts) == app.contact.count()
-    new_contacts = app.contact.get_contact_list()
-    old_contacts[index]=contact
+    contact.id = edit_contact.id
+    app.contact.edit_contact_by_id(contact.id,contact)
+    new_contacts = db.get_contact_list()
+    old_contacts.remove(edit_contact)
+    old_contacts.append(contact)
     assert sorted(old_contacts, key = Contacts.id_or_max) == sorted(new_contacts, key = Contacts.id_or_max)
+    if check_ui:
+        assert sorted(new_contacts, key=Group.id_or_max) == sorted(app.contact.get_contact_list(), key=Group.id_or_max)
+
+
 
