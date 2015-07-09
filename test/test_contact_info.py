@@ -1,6 +1,6 @@
 __author__ = 'lemontree'
 import re
-
+from model.contact import Contacts
 
 def test_information_on_homepage(app):
     contact_from_homepage = app.contact.get_contact_list()[0]
@@ -10,6 +10,14 @@ def test_information_on_homepage(app):
     assert contact_from_homepage.firstname == contact_from_editpage.firstname
     assert contact_from_homepage.lastname == contact_from_editpage.lastname
     assert contact_from_homepage.all_email_from_homepage == merge_email_like_on_homepage(contact_from_editpage)
+
+def test_information_on_homepage_vs_db(app, db):
+    contact_from_homepage = app.contact.get_contact_list()
+    def clean(contact):
+        return Contacts(id=contact.id, name=contact.firstname.strip(), lastname=contact.lastname.strip(), address=contact.address.strip(),
+                        all_email_from_homepage=merge_email_like_on_homepage(contact), all_phones_from_homepage=merge_phones_like_on_homepage(contact))
+    contact_from_db = map(clean, db.get_contact_list())
+    assert sorted(contact_from_homepage, key=Contacts.id_or_max) == sorted(contact_from_db, key=Contacts.id_or_max)
 
 
 def clear(s):
