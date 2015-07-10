@@ -16,6 +16,7 @@ class ORMFixture:
         name = Optional (str, column='group_name')
         header = Optional (str, column='group_header')
         footer = Optional (str, column='group_footer')
+        contacts = Set(lambda: ORMFixture.ORMContact, table="address_in_groups", column="id", reverse="groups", lazy=True)
 
     class ORMContact(db.Entity):
         _table_ = 'addressbook'
@@ -25,6 +26,7 @@ class ORMFixture:
         nickname = Optional(str, column='nickname')
         company = Optional(str, column='company')
         deprecated = Optional(datetime, column='deprecated')
+        groups = Set(lambda: ORMFixture.ORMGroup, table="address_in_groups", column="group_id", reverse="contacts", lazy=True)
 
     def __init__(self, host, name, user, password):
         self.db.bind('mysql', host=host, database=name, user=user, password=password, conv=decoders)
@@ -48,3 +50,18 @@ class ORMFixture:
     @db_session
     def get_contact_list(self):
         return self.convert_contacts_to_model(select( c for c in ORMFixture.ORMContact if c.deprecated is None))
+
+    @db_session
+    def get_contacts_in_group(self, group):
+        orm_group = self.get_orm_group(group)
+        return self.convert_contacts_to_model(orm_group.contacts)
+
+    def get_orm_group(self, group):
+        return list(select(g for g in ORMFixture.ORMGroup if g.id == group.id))[0]
+
+    @db_session
+    def get_contacts_not_in_group(self, group):
+        orm_group = self.get_orm_group(group)
+
+        return self.convert_contacts_to_model(
+            select(c for c in ORMFixture.ORMContact if c.deprecated is None and orm_group not in c.groups))

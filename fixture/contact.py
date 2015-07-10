@@ -103,6 +103,24 @@ class ContactHelper:
     def edit_first_contact(self):
         self.edit_contact_by_index(0)
 
+    def change_group_for_contact(self, contact_id):
+        wd = self.app.wd
+        self.app.open_homepage(wd)
+        wd.find_element_by_id("%s" % contact_id).click()
+        wd.find_element_by_xpath("//div[@class='right']/select//option[16]").click()
+        wd.find_element_by_name("add").click()
+        self.return_to_homepage()
+        self.contact_cache = None
+
+    def delete_contact_from_group(self, contact_id):
+        wd = self.app.wd
+        self.app.open_homepage(wd)
+        wd.get("http://localhost/addressbook/?group=new_name")
+        wd.find_element_by_id("%s" % contact_id).click()
+        wd.find_element_by_name("remove").click()
+        self.return_to_homepage()
+        self.contact_cache = None
+
     def view_contact_by_index(self, index):
         wd = self.app.wd
         self.app.open_homepage(wd)
